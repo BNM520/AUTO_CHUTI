@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数学的奇妙旅程</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            color: #333;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .question {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            opacity: 0;
+            transition: opacity 1s;
+        }
+        .answer-button {
+            display: inline-block;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px;
+            margin: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 1s;
+            border-radius: 5px;
+            width: 45%;
+            text-align: center;
+        }
+        .answer-button:hover {
+            background-color: #45a049;
+        }
+        .feedback {
+            font-size: 16px;
+            margin-top: 20px;
+            opacity: 0;
+            transition: opacity 1s;
+        }
+        .completed {
+            font-size: 20px;
+            color: #4CAF50;
+            margin-top: 30px;
+        }
+        .continue-button {
+            background-color: #008CBA;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+        .continue-button:hover {
+            background-color: #007B9A;
+        }
+        .retry-button {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+        .retry-button:hover {
+            background-color: #e53935;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="question-container" class="question-container">
+        <div class="question" id="question"></div>
+        <button class="answer-button" id="answer1"></button>
+        <button class="answer-button" id="answer2"></button>
+        <button class="answer-button" id="answer3"></button>
+        <button class="answer-button" id="answer4"></button>
+    </div>
+    <div class="feedback" id="feedback"></div>
+    <button class="continue-button" id="continue-button" style="display: none;" onclick="nextQuestion()">继续</button>
+    <button class="retry-button" id="retry-button" style="display: none;" onclick="retryQuestion()">重试</button>
+</div>
+
+<script>
+    const questions = [
+    {
+        question: "在上学期，我们学习了小数，它是描述________精确程度的重要工具。",
+        answers: ["世界", "事物", "国家", "天气"],
+        correctAnswers: ["世界", "事物"],
+        feedback: "小数是描述世界精确程度的重要工具，帮助我们更精确地表达现实。",
+    },
+    {
+        question: "如果没有小数，我们该如何准确表达________？",
+        answers: ["身高", "体重", "价格", "年龄"],
+        correctAnswers: ["价格"],
+        feedback: "小数帮助我们精确表达价格，这是日常生活中不可缺少的工具。",
+    },
+    {
+        question: "小数的出现，让我们能够更细致地刻画________。",
+        answers: ["世界", "事物", "长方形", "未来"],
+        correctAnswers: ["世界", "事物"],
+        feedback: "小数帮助我们刻画世界的细节，使我们能够更精准地理解现实。",
+    },
+    {
+        question: "小数的出现，它就像一把________，帮助我们看清世界的细微之处。",
+        answers: ["放大镜", "尺子", "铅笔", "放大镜"],
+        correctAnswers: ["放大镜", "尺子"],
+        feedback: "小数的精确度如同放大镜和尺子，让我们能更细致地理解世界。",
+    },
+    {
+        question: "小数的意义远不止于此。它还是连接________的桥梁。",
+        answers: ["整数", "分数", "字母", "符号"],
+        correctAnswers: ["整数", "分数"],
+        feedback: "小数将分数和整数连接起来，让我们更方便地进行转换与比较。",
+    },
+    {
+        question: "通过小数，我们可以将分数转化为更直观的形式，例如，1/2 等于________。",
+        answers: ["0.5", "1", "1.5", "0.75"],
+        correctAnswers: ["0.5"],
+        feedback: "通过小数的转化，我们可以更方便地理解和运用分数。",
+    },
+    {
+        question: "3/4 等于________。",
+        answers: ["0.5", "1", "1.5", "0.75"],
+        correctAnswers: ["0.75"],
+        feedback: "3/4 转化为小数就是 0.75，帮助我们更直观地理解分数。",
+    },
+    {
+        question: "小数的运算也充满了________。",
+        answers: ["规律", "技巧", "模式", "公式"],
+        correctAnswers: ["规律", "技巧"],
+        feedback: "小数的运算规则充满了规律，需要我们掌握一定的技巧。",
+    },
+    {
+        question: "例如，小数加减法需要________。",
+        answers: ["对齐小数点", "通分", "换算", "移位"],
+        correctAnswers: ["对齐小数点"],
+        feedback: "小数加减法要求我们对齐小数点，确保计算的精确。",
+    },
+    {
+        question: "而小数乘除法则需要考虑________。",
+        answers: ["小数点的位置", "相同分母", "计算精度", "转换公式"],
+        correctAnswers: ["小数点的位置"],
+        feedback: "在小数乘除法中，我们需要特别注意小数点的位置。",
+    },
+    {
+        question: "下学期，我们将正式进入分数的世界。分数，不仅仅是表示________关系的工具。",
+        answers: ["部分", "整体", "时间", "位置"],
+        correctAnswers: ["部分"],
+        feedback: "分数是描述部分与整体关系的重要工具，也是我们理解世界的一种思维方式。",
+    },
+    {
+        question: "分数不仅仅是表示部分关系的工具，它更是一种思维方式。它告诉我们，世界并非非黑即白，而是充满了________。",
+        answers: ["可能性", "变化", "复杂性", "对比"],
+        correctAnswers: ["可能性", "变化"],
+        feedback: "分数让我们看待世界时更加灵活，认识到世界充满了可能性和变化。",
+    },
+    {
+        question: "例如，1/2 可以表示半个苹果，也可以表示________。",
+        answers: ["一半路程", "一半时间", "一半数量", "一半份额"],
+        correctAnswers: ["一半路程", "一半时间"],
+        feedback: "1/2 可以表示一半路程或时间，分数的应用场景非常广泛。",
+    },
+    {
+        question: "分数的学习，将挑战我们对数字的固有认知。它要求我们跳出________的框架。",
+        answers: ["整数", "自然数", "负数", "复数"],
+        correctAnswers: ["整数"],
+        feedback: "分数让我们跳出整数的框架，更灵活地看待数字和问题。",
+    },
+    {
+        question: "例如，比较 1/2 和 2/3 的大小，我们不能简单地比较分子或分母，而是需要将它们转化为________的形式。",
+        answers: ["相同分母", "小数", "比例", "百分比"],
+        correctAnswers: ["相同分母"],
+        feedback: "只有通过将分数转化为相同分母的形式，我们才能进行准确的比较。",
+    },
+    {
+        question: "分数的运算也充满了________。",
+        answers: ["挑战", "趣味", "方法", "难度"],
+        correctAnswers: ["挑战"],
+        feedback: "分数运算充满挑战，但掌握技巧后，解决问题变得更加轻松。",
+    },
+    {
+        question: "例如，分数加减法需要________。",
+        answers: ["通分", "换算", "对比", "对齐"],
+        correctAnswers: ["通分"],
+        feedback: "分数加减法需要通分，使得分母相同后才能进行计算。",
+    },
+    {
+        question: "而分数乘除法则需要考虑________。",
+        answers: ["倒数", "约分", "换算", "因式分解"],
+        correctAnswers: ["倒数", "约分"],
+        feedback: "分数乘除法涉及倒数与约分的概念，掌握这些技巧能帮助我们更高效地运算。",
+    },
+    {
+        question: "几何，正是将________完美结合的学科。",
+        answers: ["数形", "数字", "符号", "大小"],
+        correctAnswers: ["数形"],
+        feedback: "几何通过将数与形结合，帮助我们理解空间和图形之间的关系。",
+    },
+    {
+        question: "它让我们能够用数学的语言描述________。",
+        answers: ["空间", "图形", "数值", "大小"],
+        correctAnswers: ["空间", "图形"],
+        feedback: "几何学科使我们能够通过数学语言描述空间和图形的特性。",
+    },
+    {
+        question: "例如，计算长方形的面积，我们需要用到________的公式。",
+        answers: ["长×宽", "宽×长", "长÷宽", "宽÷长"],
+        correctAnswers: ["长×宽"],
+        feedback: "长方形的面积公式通过数形结合的方式体现了几何的基本原理。",
+    },
+    {
+        question: "而这个公式的推导过程，就体现了________的思想。",
+        answers: ["数形结合", "逻辑推理", "演绎法", "公式化"],
+        correctAnswers: ["数形结合"],
+        feedback: "长方形面积公式的推导反映了数形结合的思想。",
+    },
+    {
+        question: "几何的学习，不仅能够培养我们的________，还能够帮助我们更好地理解________。",
+        answers: ["空间想象力", "逻辑思维能力", "创造力", "解决问题的能力"],
+        correctAnswers: ["空间想象力", "逻辑思维能力"],
+        feedback: "几何的学习能够培养我们的空间想象力，让我们更好地理解和应用数学知识。",
+    },
+    {
+        question: "例如，通过学习三角形的稳定性，我们可以理解为什么________要设计成三角形。",
+        answers: ["自行车架", "屋顶", "桥梁", "房屋"],
+        correctAnswers: ["屋顶", "桥梁"],
+        feedback: "三角形的稳定性让它成为建筑设计中的重要元素，特别是在屋顶设计中。",
+    }
+];
+
+    let currentQuestionIndex = 0;
+    let correctAnswersCount = 0; // 记录答对的题目数量
+    const questionElement = document.getElementById("question");
+    const answerButtons = [
+        document.getElementById("answer1"),
+        document.getElementById("answer2"),
+        document.getElementById("answer3"),
+        document.getElementById("answer4")
+    ];
+    const feedbackElement = document.getElementById("feedback");
+    const continueButton = document.getElementById("continue-button");
+    const retryButton = document.getElementById("retry-button");
+
+    // 记录每道题是否已答过，避免重试影响计数
+    let answeredQuestions = [];
+
+    function showQuestion(index) {
+        const question = questions[index];
+        questionElement.textContent = question.question;
+
+        answerButtons.forEach((button, i) => {
+            button.textContent = question.answers[i];
+            button.style.opacity = 1;
+            button.onclick = () => handleAnswer(question.answers[i], question.correctAnswers, question.feedback);
+        });
+
+        questionElement.style.opacity = 1;
+    }
+
+    function handleAnswer(selectedAnswer, correctAnswers, feedback) {
+        // 只记录第一次答题的结果
+        if (answeredQuestions[currentQuestionIndex]) return;
+
+        const isCorrect = correctAnswers.includes(selectedAnswer);
+        if (isCorrect) {
+            correctAnswersCount++; // 增加正确答题数
+        }
+
+        answeredQuestions[currentQuestionIndex] = true; // 标记题目已答过
+
+        feedbackElement.style.opacity = 1;
+        feedbackElement.textContent = isCorrect
+            ? `正确！${feedback}`
+            : `错误！${feedback}`;
+
+        // Show continue and retry buttons
+        continueButton.style.display = "inline-block";
+        retryButton.style.display = "inline-block";
+    }
+
+    function nextQuestion() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < questions.length) {
+            showQuestion(currentQuestionIndex);
+            feedbackElement.style.opacity = 0;
+            continueButton.style.display = "none";
+            retryButton.style.display = "none";
+        } else {
+            showCompletion();
+        }
+    }
+
+    function retryQuestion() {
+        feedbackElement.style.opacity = 0;
+        continueButton.style.display = "none";
+        retryButton.style.display = "none";
+        showQuestion(currentQuestionIndex);
+    }
+
+    function calculateGrade() {
+        if (correctAnswersCount >= 18) return "A";
+        if (correctAnswersCount >= 12) return "B";
+        if (correctAnswersCount >= 8) return "C";
+        return "D";
+    }
+
+    function showCompletion() {
+        const grade = calculateGrade(); // 根据答题数量计算等级
+        const completionMessage = document.createElement("div");
+        completionMessage.classList.add("completed");
+        completionMessage.textContent = `恭喜你完成了所有问题！你答对了 ${correctAnswersCount} 道题，等级：${grade}`;
+        document.querySelector(".container").appendChild(completionMessage);
+    }
+
+    // 初始化第一个问题
+    showQuestion(currentQuestionIndex);
+</script>
+
+</body>
+</html>
